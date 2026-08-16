@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>English Trainer</title>
+<meta name="theme-color" content="#2563eb" />
+<meta name="description" content="Englisch lernen mit Multiple-Choice-Karten – offline, ohne Login." />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="EN Trainer" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== HOME ===== -->
+  <section class="screen" id="screen-home" data-screen="home">
+    <header class="topbar">
+      <h1 class="brand">English Trainer</h1>
+      <div class="streak-pill" id="home-date"></div>
+    </header>
+
+    <main class="screen-body">
+      <h2 class="section-title">Was möchtest du heute lernen?</h2>
+      <div class="category-grid" id="category-grid" aria-label="Kategorien auswählen"></div>
+
+      <h2 class="section-title">Anzahl Fragen</h2>
+      <div class="count-row" id="count-row">
+        <button class="count-chip" data-count="10">10</button>
+        <button class="count-chip" data-count="20">20</button>
+        <button class="count-chip" data-count="30">30</button>
+        <button class="count-chip" data-count="50">50</button>
+        <button class="count-chip" data-count="custom" id="count-custom-btn">eigene</button>
+      </div>
+      <input type="number" id="count-custom-input" class="custom-input hidden" min="1" max="500" placeholder="Anzahl eingeben" />
+
+      <button class="btn-primary btn-start" id="btn-start-round">▶ Lernen starten</button>
+
+      <div class="daily-card" id="daily-card">
+        <div class="daily-card-title" id="daily-title">Heute</div>
+        <div class="daily-card-sub" id="daily-sub">Lade Tagesrunde …</div>
+        <button class="btn-secondary" id="btn-start-daily">Tagesrunde starten</button>
+      </div>
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab-btn active" data-tab="home">🏠<span>Start</span></button>
+      <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
+      <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
+      <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+    </nav>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section class="screen hidden" id="screen-quiz" data-screen="quiz">
+    <header class="quiz-header">
+      <button class="icon-btn" id="btn-quiz-exit" aria-label="Abbrechen">✕</button>
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-text" id="quiz-progress-text">Frage 1 / 20</div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+      </div>
+      <div class="quiz-score" id="quiz-score">✓ 0</div>
+    </header>
+
+    <main class="screen-body quiz-body">
+      <div class="quiz-category-tag" id="quiz-category-tag">Auto</div>
+      <h2 class="quiz-question" id="quiz-question">Frage …</h2>
+
+      <div class="answers" id="quiz-answers">
+        <button class="answer-btn" data-idx="0"><span class="answer-letter">A</span><span class="answer-text"></span></button>
+        <button class="answer-btn" data-idx="1"><span class="answer-letter">B</span><span class="answer-text"></span></button>
+        <button class="answer-btn" data-idx="2"><span class="answer-letter">C</span><span class="answer-text"></span></button>
+        <button class="answer-btn" data-idx="3"><span class="answer-letter">D</span><span class="answer-text"></span></button>
+      </div>
+
+      <div class="feedback hidden" id="quiz-feedback">
+        <div class="feedback-text" id="feedback-text"></div>
+        <div class="feedback-correct hidden" id="feedback-correct-answer"></div>
+      </div>
+    </main>
+
+    <footer class="quiz-footer">
+      <button class="btn-primary hidden" id="btn-quiz-next">Weiter →</button>
+    </footer>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section class="screen hidden" id="screen-result" data-screen="result">
+    <main class="screen-body result-body">
+      <div class="result-emoji" id="result-emoji">🎉</div>
+      <h2 class="result-title">Heute gelernt</h2>
+      <div class="result-count" id="result-count">20 Fragen</div>
+
+      <div class="result-row">
+        <div class="result-stat correct"><span id="result-correct">17</span><label>richtig</label></div>
+        <div class="result-stat wrong"><span id="result-wrong">3</span><label>falsch</label></div>
+      </div>
+
+      <div class="result-percent" id="result-percent">85 % richtig</div>
+
+      <div class="result-details">
+        <div class="result-detail-row"><span>⏱ Lernzeit</span><strong id="result-time">–</strong></div>
+        <div class="result-detail-row"><span>📚 Gelernte Wörter</span><strong id="result-words">–</strong></div>
+        <div class="result-detail-row"><span>🧠 Schwierige Wörter</span><strong id="result-hard">–</strong></div>
+        <div class="result-detail-row"><span>🏆 Beste Kategorie</span><strong id="result-best">–</strong></div>
+        <div class="result-detail-row"><span>📉 Schwächste Kategorie</span><strong id="result-worst">–</strong></div>
+      </div>
+
+      <button class="btn-primary" id="btn-result-home">Zur Startseite</button>
+    </main>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="screen hidden" id="screen-stats" data-screen="stats">
+    <header class="topbar">
+      <h1 class="brand">Mein Fortschritt</h1>
+    </header>
+    <main class="screen-body">
+      <div class="stats-summary" id="stats-summary"></div>
+      <h2 class="section-title">Nach Kategorie</h2>
+      <div class="progress-list" id="progress-list"></div>
+    </main>
+    <nav class="tabbar">
+      <button class="tab-btn" data-tab="home">🏠<span>Start</span></button>
+      <button class="tab-btn active" data-tab="stats">📈<span>Fortschritt</span></button>
+      <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
+      <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+    </nav>
+  </section>
+
+  <!-- ===== DIFFICULT WORDS ===== -->
+  <section class="screen hidden" id="screen-difficult" data-screen="difficult">
+    <header class="topbar">
+      <h1 class="brand">Meine schwierigen Wörter</h1>
+    </header>
+    <main class="screen-body">
+      <p class="hint-text" id="difficult-hint">Wörter, bei denen du besonders viele Fehler machst.</p>
+      <div id="difficult-list"></div>
+      <button class="btn-primary hidden" id="btn-learn-difficult">▶ Schwierige Wörter üben</button>
+    </main>
+    <nav class="tabbar">
+      <button class="tab-btn" data-tab="home">🏠<span>Start</span></button>
+      <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
+      <button class="tab-btn active" data-tab="difficult">🧠<span>Schwierig</span></button>
+      <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+    </nav>
+  </section>
+
+  <!-- ===== MANAGE ===== -->
+  <section class="screen hidden" id="screen-manage" data-screen="manage">
+    <header class="topbar">
+      <h1 class="brand">Verwalten</h1>
+    </header>
+    <main class="screen-body">
+      <h2 class="section-title">Kategorien</h2>
+      <div id="manage-category-list" class="manage-list"></div>
+      <button class="btn-secondary" id="btn-add-category">+ Neue Kategorie</button>
+
+      <h2 class="section-title">Neue Lernkarte</h2>
+      <form id="form-add-card" class="card-form">
+        <label>Englisch<input type="text" id="input-en" required placeholder="z. B. windshield" /></label>
+        <label>Deutsch<input type="text" id="input-de" required placeholder="z. B. Windschutzscheibe" /></label>
+        <label>Kategorie
+          <select id="input-category" required></select>
+        </label>
+        <label>Typ
+          <select id="input-type">
+            <option value="word">Wort / Redewendung</option>
+            <option value="sentence">Ganzer Satz / Frage</option>
+          </select>
+        </label>
+        <label>Schwierigkeit
+          <select id="input-difficulty">
+            <option value="easy">Leicht</option>
+            <option value="medium" selected>Mittel</option>
+            <option value="hard">Schwer</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-primary">Karte speichern</button>
+      </form>
+      <div id="manage-feedback" class="manage-feedback hidden"></div>
+    </main>
+    <nav class="tabbar">
+      <button class="tab-btn" data-tab="home">🏠<span>Start</span></button>
+      <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
+      <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
+      <button class="tab-btn active" data-tab="manage">⚙️<span>Verwalten</span></button>
+    </nav>
+  </section>
+
+  <div class="loading-overlay" id="loading-overlay"><div class="spinner"></div></div>
+</div>
+
+<script src="js/data/cards.js"></script>
+<script src="js/db.js"></script>
+<script src="js/seed.js"></script>
+<script src="js/categories.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/review.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
