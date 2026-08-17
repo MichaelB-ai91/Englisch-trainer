@@ -526,3 +526,17 @@ html, body {
   cursor: pointer;
   flex-shrink: 0;
 }
+
+.speed-row { display: flex; gap: 8px; margin: 0 0 14px; }
+.speed-chip {
+  padding: 8px 14px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+}
+.speed-chip.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary-dark); }

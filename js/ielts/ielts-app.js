@@ -9,6 +9,7 @@ const IeltsApp = (() => {
   const state = {
     level: "beginner",
     session: null,
+    speechRate: 1,
   };
 
   const SKILLS = [
@@ -154,6 +155,17 @@ const IeltsApp = (() => {
     Speech.stop();
   }
 
+  function wireSpeedRow(speedRow) {
+    speedRow.querySelectorAll(".speed-chip").forEach((chip) => {
+      chip.classList.toggle("selected", Number(chip.dataset.rate) === state.speechRate);
+      chip.onclick = () => {
+        state.speechRate = Number(chip.dataset.rate);
+        speedRow.querySelectorAll(".speed-chip").forEach((c) => c.classList.remove("selected"));
+        chip.classList.add("selected");
+      };
+    });
+  }
+
   function renderPracticeScreen() {
     const s = state.session;
     const item = s.item;
@@ -164,10 +176,12 @@ const IeltsApp = (() => {
     const listenBtn = el("btn-test-listen");
     const transcriptBtn = el("btn-test-toggle-transcript");
     const textEl = el("test-passage-text");
+    const speedRow = el("test-speed-row");
 
     if (s.skill === "reading") {
       listenBtn.classList.add("hidden");
       transcriptBtn.classList.add("hidden");
+      speedRow.classList.add("hidden");
       textEl.textContent = item.text;
       textEl.classList.remove("hidden");
     } else {
@@ -177,9 +191,12 @@ const IeltsApp = (() => {
 
       if (Speech.isSupported()) {
         listenBtn.classList.remove("hidden");
-        listenBtn.onclick = () => Speech.speak(item.text);
+        listenBtn.onclick = () => Speech.speak(item.text, null, state.speechRate);
+        speedRow.classList.remove("hidden");
+        wireSpeedRow(speedRow);
       } else {
         listenBtn.classList.add("hidden");
+        speedRow.classList.add("hidden");
       }
       transcriptBtn.classList.remove("hidden");
       transcriptBtn.onclick = () => {

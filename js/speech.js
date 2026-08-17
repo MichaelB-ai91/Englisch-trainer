@@ -52,7 +52,7 @@ const Speech = (() => {
     }
   }
 
-  function speak(text, onEnd) {
+  function speak(text, onEnd, rate) {
     if (!isSupported() || !text) {
       if (typeof onEnd === "function") onEnd();
       return;
@@ -61,7 +61,7 @@ const Speech = (() => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     if (cachedVoice) utterance.voice = cachedVoice;
-    utterance.rate = 0.95;
+    utterance.rate = typeof rate === "number" ? rate : 0.95;
     if (typeof onEnd === "function") {
       utterance.onend = onEnd;
       utterance.onerror = onEnd;
