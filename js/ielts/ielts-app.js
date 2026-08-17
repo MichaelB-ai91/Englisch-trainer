@@ -228,9 +228,9 @@ const IeltsApp = (() => {
       const row = document.createElement("div");
       row.className = "test-tfng-row";
       [
-        ["true", "Richtig"],
-        ["false", "Falsch"],
-        ["not_given", "Nicht angegeben"],
+        ["true", "True"],
+        ["false", "False"],
+        ["not_given", "Not Given"],
       ].forEach(([value, label]) => {
         const btn = document.createElement("button");
         btn.className = "test-option-btn";

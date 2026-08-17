@@ -10,15 +10,34 @@ const Speech = (() => {
     return "speechSynthesis" in window;
   }
 
+  /* Die Web Speech API kennt kein offizielles "Geschlecht"-Attribut für Stimmen —
+     daher wird anhand bekannter Stimmennamen geraten (funktioniert auf den meisten
+     Windows-, Android- und iOS-Browsern zuverlässig, aber nicht garantiert überall). */
+  const FEMALE_VOICE_HINTS = [
+    "female", "zira", "samantha", "victoria", "karen", "moira", "tessa", "susan",
+    "hazel", "aria", "jenny", "fiona", "kate", "serena", "allison", "ava", "emma",
+    "salli", "joanna", "google us english", "google uk english female",
+  ];
+  const MALE_VOICE_HINTS = [
+    "male", "david", "mark", "james", "daniel", "fred", "george", "alex",
+    "tom", "guy", "ryan", "google uk english male",
+  ];
+
   function pickEnglishVoice() {
     if (!isSupported()) return null;
     const voices = window.speechSynthesis.getVoices();
     if (!voices.length) return null;
-    return (
-      voices.find((v) => v.lang === "en-US") ||
-      voices.find((v) => v.lang && v.lang.startsWith("en")) ||
-      voices[0]
-    );
+
+    const englishVoices = voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith("en"));
+    const pool = englishVoices.length ? englishVoices : voices;
+
+    const femaleMatch = pool.find((v) => FEMALE_VOICE_HINTS.some((hint) => v.name.toLowerCase().includes(hint)));
+    if (femaleMatch) return femaleMatch;
+
+    const notObviouslyMale = pool.find((v) => !MALE_VOICE_HINTS.some((hint) => v.name.toLowerCase().includes(hint)));
+    if (notObviouslyMale) return notObviouslyMale;
+
+    return pool.find((v) => v.lang === "en-US") || pool[0];
   }
 
   if (isSupported()) {
