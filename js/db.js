@@ -1,8 +1,8 @@
 /* db.js — IndexedDB-Wrapper für die English-Trainer-App.
-   Object Stores: cards, categories, settings, dailyRounds. */
+   Object Stores: cards, categories, settings, dailyRounds, ieltsAttempts. */
 
 const DB_NAME = "englischTrainerDB";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 const DB = (() => {
   let dbPromise = null;
@@ -27,6 +27,9 @@ const DB = (() => {
         }
         if (!db.objectStoreNames.contains("dailyRounds")) {
           db.createObjectStore("dailyRounds", { keyPath: "date" });
+        }
+        if (!db.objectStoreNames.contains("ieltsAttempts")) {
+          db.createObjectStore("ieltsAttempts", { keyPath: "id" });
         }
       };
 

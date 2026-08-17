@@ -28,6 +28,7 @@ const App = (() => {
     if (name === "stats") renderStats();
     if (name === "difficult") renderDifficult();
     if (name === "manage") renderManage();
+    if (name === "test-home") IeltsApp.renderHome();
     window.scrollTo(0, 0);
   }
 
@@ -452,7 +453,7 @@ const App = (() => {
     }
   }
 
-  return { init };
+  return { init, switchScreen };
 })();
 
 document.addEventListener("DOMContentLoaded", () => App.init());

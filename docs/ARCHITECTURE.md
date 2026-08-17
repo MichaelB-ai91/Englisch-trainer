@@ -27,6 +27,11 @@ Englisch-Trainer/
     stats.js               Auswertung: Rundenergebnis, Tagesstatistik, Kategorie-Fortschritt
     review.js              Gewichtung "schwierige Wörter" (einfaches Wiederholungssystem)
     data/cards.js           Rohdaten der 1.000 Start-Lernkarten
+    speech.js               Wrapper um die Web Speech API (Sprachausgabe für IELTS-Listening)
+    ielts/
+      ielts-data.js           Reading-Passagen & Listening-Skripte, 5 Niveaustufen
+      ielts-engine.js         Auswertung, Timer, Band-Score-Näherung, Stärken/Schwächen
+      ielts-app.js            Screen-Steuerung für den TEST-Bereich
   icons/                  App-Icons (generiert mit generate_icons.py)
   docs/                   Diese Dokumentation
 ```
@@ -67,6 +72,23 @@ Auswahl für die automatische Tagesrunde).
 { date: "YYYY-MM-DD", categoryIds: string[], cardIds: string[], total, correct, wrong, completed }
 ```
 
+### Object Store `ieltsAttempts` (seit `DB_VERSION = 2`)
+```
+{
+  id: string,                 // z. B. "ielts-1699999999999"
+  date: string,                 // YYYY-MM-DD
+  mode: "reading" | "listening" | "full",
+  level: string,                 // "beginner" | "intermediate" | "upper" | "advanced" | "ielts"
+  skillScores: { reading?: number, listening?: number }, // Band je Teilbereich
+  overallBand: number | null,    // Durchschnitt, auf 0,5 gerundet
+  strengths: string | null,      // stärkster Fragetyp
+  weaknesses: string | null,     // schwächster Fragetyp
+  durationMs: number,
+}
+```
+Schema ist bewusst so offen gehalten, dass Phase 2 (`writing`/`speaking` in `skillScores`)
+ohne erneute Migration ergänzt werden kann.
+
 ## Multiple-Choice-Logik (quiz.js)
 
 - **Distraktoren** (falsche Antworten) werden nicht fest gespeichert, sondern zur Laufzeit
@@ -92,6 +114,40 @@ gewichtete Zufallsauswahl:
 „Meine schwierigen Wörter" zeigt alle Karten mit mindestens 3 Abfragen und einer
 Erfolgsquote unter 70 %, gruppiert nach Kategorie.
 
+## TEST-Bereich / IELTS-Vorbereitung (js/ielts/, js/speech.js)
+
+Eigener Namensraum, unabhängig vom Vokabelsystem, aber lose damit verbunden:
+
+- **Inhalte** (`ielts-data.js`): 10 Reading-Passagen + 10 Listening-Skripte über 5 Niveaustufen,
+  eigenständig verfasstes Übungsmaterial (**keine** echten Cambridge-Prüfungsfragen — diese
+  sind urheberrechtlich geschützt). Einheitliches Fragetyp-Schema: `mc` (Multiple Choice),
+  `tfng` (True/False/Not Given), `matching` (Überschrift zuordnen), `gap` (Lückentext,
+  normalisierter Textabgleich inkl. optionaler `altAnswers`).
+- **Auswertung** (`ielts-engine.js`): Prüft Antworten je Fragetyp, rechnet Prozent richtig in
+  einen ungefähren Band-Score um (**eigene Näherungstabelle**, keine Kopie der offiziellen
+  Cambridge-Konvertierung), liefert Stärken-/Schwächen-Analyse nach Fragetyp, sowie einen
+  einfachen Countdown-Timer (`createTimer`).
+- **UI/Steuerung** (`ielts-app.js`): Eigenes `render*`-Muster wie `app.js`, nutzt aber
+  `App.switchScreen()` (aus `app.js` exportiert) für die eigentliche Screen-Umschaltung, statt
+  eine zweite parallele Navigationslogik zu bauen. Reading und Listening teilen sich eine
+  gemeinsame Vorlage (`#screen-test-practice`), gesteuert über `state.session.skill`.
+- **Listening-Audio**: `speech.js` (Web Speech API `speechSynthesis`, `lang: "en-US"`) liest
+  das Skript direkt im Browser vor — offline, ohne Audiodateien. Dasselbe Modul ist bewusst
+  eigenständig gehalten, damit es später auch für eine Vokabel-Ausspracheausgabe
+  wiederverwendet werden kann.
+- **Full IELTS Test**: verkettet Reading und Listening über eine kleine Warteschlange
+  (`state.session.remainingQueue`) im selben Session-Objekt, sodass am Ende ein
+  gemeinsames Ergebnis mit gerundetem Gesamt-Band gespeichert wird.
+- **Verknüpfung mit dem Vokabelsystem**: Der Ergebnis-Screen ruft `Review.getDifficultCards()`
+  auf und schlägt bei Bedarf passende Vokabel-Kategorien vor — reine Lesezugriffe, das
+  Vokabelsystem selbst bleibt unverändert.
+
+**Wichtiger Hinweis:** Writing und Speaking sind als Platzhalter-Karten ("Bald verfügbar")
+in der UI sichtbar, aber noch nicht funktional (Phase 2). Geplant: Freitext-Editor bzw.
+Audioaufnahme über `MediaRecorder`/`getUserMedia`, Bewertung per Selbsteinschätzung anhand
+offizieller IELTS-Kriterienkarten statt automatischer KI-Bewertung (bewusste Entscheidung,
+um ohne Server/API-Key auszukommen).
+
 ## Neue Kategorien / Lernkarten hinzufügen (für Entwickler)
 
 - **Neue Start-Lernkarten**: in `js/data/cards.js` dem `RAW_CARDS`-Array neue Zeilen im Format
@@ -106,7 +162,9 @@ Erfolgsquote unter 70 %, gruppiert nach Kategorie.
 Diese Punkte wurden bewusst nicht in Version 1 umgesetzt, passen aber ohne größere
 Umbauten in die bestehende Struktur:
 
-- 🔊 Aussprache (Web Speech API `speechSynthesis`, direkt im Browser, kein Server nötig)
+- 🔊 Vokabel-Aussprache im Lernbildschirm (Modul `speech.js` existiert bereits, wird bisher
+  nur im TEST-Bereich für Listening genutzt — Anbindung an den Vokabel-Lernbildschirm fehlt noch)
+- ✍️ IELTS Writing (Task 1 & 2) und 🎤 Speaking (Part 1–3) — Phase 2 des TEST-Bereichs
 - 🎤 Eigene Aussprache aufnehmen / Sprachprüfung
 - ⭐ Favoriten, 📚 eigene Lernlisten
 - 🧠 Vollständiges Spaced-Repetition-System (SM-2) — `review.js` kapselt die Gewichtung bereits

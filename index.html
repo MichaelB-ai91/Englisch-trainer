@@ -53,6 +53,7 @@
       <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
       <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
       <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+      <button class="tab-btn" data-tab="test-home">🎯<span>TEST</span></button>
     </nav>
   </section>
 
@@ -130,6 +131,7 @@
       <button class="tab-btn active" data-tab="stats">📈<span>Fortschritt</span></button>
       <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
       <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+      <button class="tab-btn" data-tab="test-home">🎯<span>TEST</span></button>
     </nav>
   </section>
 
@@ -148,6 +150,7 @@
       <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
       <button class="tab-btn active" data-tab="difficult">🧠<span>Schwierig</span></button>
       <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+      <button class="tab-btn" data-tab="test-home">🎯<span>TEST</span></button>
     </nav>
   </section>
 
@@ -190,7 +193,82 @@
       <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
       <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
       <button class="tab-btn active" data-tab="manage">⚙️<span>Verwalten</span></button>
+      <button class="tab-btn" data-tab="test-home">🎯<span>TEST</span></button>
     </nav>
+  </section>
+
+  <!-- ===== TEST HOME (IELTS-Vorbereitung) ===== -->
+  <section class="screen hidden" id="screen-test-home" data-screen="test-home">
+    <header class="topbar">
+      <h1 class="brand">🎯 IELTS-Vorbereitung</h1>
+    </header>
+    <main class="screen-body">
+      <p class="hint-text">Eigenständiges Übungsmaterial im Stil des IELTS-Tests. Wähle zuerst dein Niveau.</p>
+
+      <h2 class="section-title">Niveau</h2>
+      <div class="level-row" id="test-level-row"></div>
+
+      <h2 class="section-title">Kompetenzen</h2>
+      <div class="skill-grid" id="test-skill-grid"></div>
+
+      <button class="btn-primary" id="btn-start-full-test">▶ Full IELTS Test starten</button>
+
+      <h2 class="section-title">Deine Ergebnisse</h2>
+      <div id="test-results-summary"></div>
+    </main>
+    <nav class="tabbar">
+      <button class="tab-btn" data-tab="home">🏠<span>Start</span></button>
+      <button class="tab-btn" data-tab="stats">📈<span>Fortschritt</span></button>
+      <button class="tab-btn" data-tab="difficult">🧠<span>Schwierig</span></button>
+      <button class="tab-btn" data-tab="manage">⚙️<span>Verwalten</span></button>
+      <button class="tab-btn active" data-tab="test-home">🎯<span>TEST</span></button>
+    </nav>
+  </section>
+
+  <!-- ===== TEST PRACTICE (Reading & Listening, gemeinsame Vorlage) ===== -->
+  <section class="screen hidden" id="screen-test-practice" data-screen="test-practice">
+    <header class="quiz-header">
+      <button class="icon-btn" id="btn-test-exit" aria-label="Abbrechen">✕</button>
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-text" id="test-practice-title">Reading</div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="test-timer-fill"></div></div>
+      </div>
+      <div class="quiz-score" id="test-timer-text">05:00</div>
+    </header>
+    <main class="screen-body">
+      <div id="test-passage-block">
+        <h2 class="test-passage-title" id="test-passage-title">Titel</h2>
+        <div class="test-audio-row">
+          <button class="btn-secondary hidden" id="btn-test-listen">🔊 Anhören</button>
+          <button class="btn-secondary hidden" id="btn-test-toggle-transcript">Transkript anzeigen</button>
+        </div>
+        <div class="test-passage-text hidden" id="test-passage-text"></div>
+      </div>
+      <div id="test-questions-list"></div>
+    </main>
+    <footer class="quiz-footer">
+      <button class="btn-primary" id="btn-test-submit">Abgeben</button>
+    </footer>
+  </section>
+
+  <!-- ===== TEST RESULT ===== -->
+  <section class="screen hidden" id="screen-test-result" data-screen="test-result">
+    <main class="screen-body result-body">
+      <div class="result-emoji" id="test-result-emoji">🎯</div>
+      <h2 class="result-title" id="test-result-title">Testergebnis</h2>
+      <div class="band-score-big" id="test-overall-band">7.0</div>
+      <div class="result-count">Geschätzter IELTS-Band-Score</div>
+
+      <div class="progress-list" id="test-skill-breakdown"></div>
+
+      <h2 class="section-title">Stärken &amp; Schwächen</h2>
+      <div id="test-strengths-weaknesses"></div>
+
+      <h2 class="section-title">Empfehlungen</h2>
+      <div id="test-recommendations"></div>
+
+      <button class="btn-primary" id="btn-test-result-home">Zur Startseite</button>
+    </main>
   </section>
 
   <div class="loading-overlay" id="loading-overlay"><div class="spinner"></div></div>
@@ -203,6 +281,10 @@
 <script src="js/quiz.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/review.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/ielts/ielts-data.js"></script>
+<script src="js/ielts/ielts-engine.js"></script>
+<script src="js/ielts/ielts-app.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

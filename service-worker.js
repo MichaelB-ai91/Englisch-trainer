@@ -1,4 +1,4 @@
-const CACHE_NAME = "english-trainer-v1";
+const CACHE_NAME = "english-trainer-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -12,6 +12,10 @@ const APP_SHELL = [
   "./js/stats.js",
   "./js/review.js",
   "./js/data/cards.js",
+  "./js/speech.js",
+  "./js/ielts/ielts-data.js",
+  "./js/ielts/ielts-engine.js",
+  "./js/ielts/ielts-app.js",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png"

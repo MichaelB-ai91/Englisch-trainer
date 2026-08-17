@@ -71,3 +71,36 @@ für die spätere Wartung wichtig).
 **Dateien:** `docs/DEPLOYMENT.md`
 Optionen für die dauerhafte Installation auf dem Smartphone dokumentiert (lokal testen
 vs. dauerhaftes HTTPS-Hosting, das für Service Worker/Installierbarkeit nötig ist).
+Die App wurde anschließend live auf GitHub Pages veröffentlicht.
+
+## Erweiterung — Neuer Bereich „TEST" (IELTS-Vorbereitung, Phase 1)
+**Dateien:** `js/ielts/ielts-data.js`, `js/ielts/ielts-engine.js`, `js/ielts/ielts-app.js`,
+`js/speech.js`, `index.html`, `css/style.css`, `js/db.js`, `service-worker.js`
+
+Neuer 5. Hauptbereich „🎯 TEST" für gezielte IELTS-Vorbereitung, in dieser Phase mit
+**Reading** und **Listening** (Writing/Speaking als Phase 2 vorgesehen, Platzhalter-Karten
+mit „Bald verfügbar" bereits sichtbar):
+
+- 10 eigenständig verfasste Reading-Passagen + 10 Listening-Skripte über 5 Niveaustufen
+  (Beginner … IELTS Preparation), je 8 Fragen (Multiple Choice, True/False/Not Given,
+  Matching Headings, Gap-Fill) — bewusst kein kopiertes Cambridge-Prüfungsmaterial.
+- Listening wird per `speech.js` (Web Speech API, offline) vorgelesen; dasselbe Modul kann
+  später auch für die Vokabel-Aussprache wiederverwendet werden.
+- Eigene, klar als Näherung gekennzeichnete Prozent→Band-Umrechnungstabelle in
+  `ielts-engine.js` (keine Kopie der offiziellen Cambridge-Tabelle).
+- „Full IELTS Test": verkettet Reading und Listening automatisch, Timer pro Teil,
+  Gesamt-Band als gerundeter Durchschnitt.
+- Ergebnis-Screen mit Band-Score, Stärken/Schwächen nach Fragetyp und Empfehlungen —
+  inklusive Verknüpfung zum bestehenden Vokabelsystem (`Review.getDifficultCards()`),
+  das bei schwachem Ergebnis passende Vokabel-Kategorien vorschlägt.
+- `db.js` auf `DB_VERSION = 2` angehoben (neuer Store `ieltsAttempts`); Migration wurde
+  gezielt gegen eine simulierte bestehende v1-Datenbank getestet — bestehende Vokabeldaten
+  bleiben beim Update unangetastet.
+
+**Beim Testen gefundene und behobene Bugs:**
+- `app.js` prüfte `window.IeltsApp`, um die neuen Screens zu rendern — `const`-Deklarationen
+  erzeugen aber keine `window`-Property, wodurch der TEST-Tab leer blieb. Fix: direkter
+  Bezeichner-Zugriff (`IeltsApp.renderHome()`), wie im Rest der App üblich.
+- Empfehlungstext zeigte fälschlich eine „Schwäche" an, wenn alle Fragetypen bei 100% lagen
+  (kleinster Wert bei einem Unentschieden). Fix: Empfehlung nur bei Erfolgsquote < 100%.
+- `.level-chip` unterschritt mit 38px knapp die 44px-Touch-Ziel-Vorgabe — behoben.

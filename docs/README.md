@@ -14,6 +14,9 @@ ohne Server, ohne Login, ohne Benutzerkonto.
 - Statistik nach jeder Runde und je Kategorie
 - "Meine schwierigen Wörter" – Wörter mit vielen Fehlern werden automatisch häufiger wiederholt
 - Eigene Lernkarten und eigene Kategorien hinzufügen
+- **🎯 TEST-Bereich**: gezielte IELTS-Vorbereitung mit Reading- und Listening-Übungen auf
+  5 Niveaustufen, geschätztem Band-Score, Stärken/Schwächen-Analyse und einem
+  "Full IELTS Test"-Modus (Writing & Speaking folgen als spätere Erweiterung)
 - Funktioniert vollständig offline
 
 ## App auf dem Smartphone installieren
@@ -37,6 +40,9 @@ Kurzfassung, sobald die App online erreichbar ist (z. B. über GitHub Pages):
 - **📈 Fortschritt** (untere Leiste): Gesamtstatistik und Erfolgsquote je Kategorie.
 - **🧠 Schwierig**: Wörter mit niedriger Erfolgsquote, gezielt übbar über den Button oben.
 - **⚙️ Verwalten**: Eigene Kategorien anlegen/löschen, neue Lernkarten hinzufügen.
+- **🎯 TEST**: Niveau wählen, dann Reading oder Listening starten (oder "Full IELTS Test"
+  für beides nacheinander). Am Ende gibt es einen geschätzten Band-Score, deine Stärken/
+  Schwächen nach Fragetyp und konkrete Übungsempfehlungen.
 
 ## Neue Lernkarte hinzufügen
 
